@@ -10,7 +10,7 @@ public class Year {
 
 	private int name;
 	
-	private double mony;
+	private double money;
 	
 	private List<Month> monthList = new ArrayList<Month>();
 
@@ -22,12 +22,12 @@ public class Year {
 		this.name = name;
 	}
 
-	public double getMony() {
-		return mony;
+	public double getMoney() {
+		return money;
 	}
 
-	public void setMony(double mony) {
-		this.mony = mony;
+	public void setMoney(double money) {
+		this.money = money;
 	}
 
 	public List<Month> getMonthList() {
@@ -46,7 +46,7 @@ public class Year {
 	 */
 	public void appendItem(int m, int d, Item item) {
 		//追加金额
-		this.mony = this.mony + item.getMoney();
+		this.money = this.money + item.getMoney();
 		
 		//根据月数字获取月对象
 		Month nowMonth = null;

@@ -116,7 +116,7 @@ public class Main {
 				html.append("<tr>");
 				String ym = y.getName() + "." + m.getName();
 				html.append("<td><a href='#").append(ym).append("'>").append(ym).append("</a></td>");
-				html.append("<td align='right'>").append(m.getMony()).append("</td>");
+				html.append("<td align='right'>").append(m.getMoney()).append("</td>");
 				html.append("</tr>");
 			}
 		}
@@ -130,7 +130,7 @@ public class Main {
 				html.append("<td><a href='#'>↑</a></td>");
 				String ym = y.getName() + "." + m.getName();
 				html.append("<td id='").append(ym).append("'>").append(ym).append("</td>");
-				html.append("<td align='right'>").append(m.getMony()).append("</td>");
+				html.append("<td align='right'>").append(m.getMoney()).append("</td>");
 				html.append("</tr>");
 				for(Day d : m.getDayList()) {
 					html.append("<tr>");
@@ -145,7 +145,7 @@ public class Main {
 					}
 					html.append("</ul>");
 					html.append("</td>");
-					html.append("<td align='right'>").append(d.getMony()).append("</td>");
+					html.append("<td align='right'>").append(d.getMoney()).append("</td>");
 					html.append("</tr>");
 				}
 				html.append("</table>").append("\n");

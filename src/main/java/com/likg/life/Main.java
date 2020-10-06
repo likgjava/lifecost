@@ -1,6 +1,7 @@
 package com.likg.life;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -33,7 +34,7 @@ public class Main {
      */
     private void init() {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(SOURCE_FILE_PATH), "GBK"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(SOURCE_FILE_PATH), StandardCharsets.UTF_8));
 
             String nowDay = "";
             String line = br.readLine();

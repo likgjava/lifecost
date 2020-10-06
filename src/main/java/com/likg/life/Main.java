@@ -26,8 +26,11 @@ public class Main {
      */
     private List<Year> yearList = new ArrayList<Year>();
 
-    // 存放专项消费记录
+    // 存放专项消费记录，格式{类型: 专项消费记录}
     private Map<String, List<SpecialItem>> specialItemData = new HashMap<>();
+
+    // 月度专项消费金额统计，格式{"2019.9": 100.0}
+    private Map<String, Double> monthSpecialMoneyStat = new TreeMap<>();
 
     /**
      * 初始化，获取所有消费记录数据并组装
@@ -73,12 +76,12 @@ public class Main {
     private void dealSpecialItem(String date, String line) {
         StringTokenizer nameValue = new StringTokenizer(line.trim());
         String desc = nameValue.nextToken();
-        String value = nameValue.nextToken();
+        Double money = Double.parseDouble(nameValue.nextToken());
         String[] data = desc.split("[:：]");
         String type = data[1];
         String name = data[2];
 
-        SpecialItem specialItem = new SpecialItem(type, date, name, Double.parseDouble(value));
+        SpecialItem specialItem = new SpecialItem(type, date, name, money);
 
         if (this.specialItemData.containsKey(type)) {
             this.specialItemData.get(type).add(specialItem);
@@ -86,6 +89,17 @@ public class Main {
             List<SpecialItem> list = new ArrayList<>();
             list.add(specialItem);
             this.specialItemData.put(type, list);
+        }
+
+        // 月度专项消费统计数据
+        String[] ymd = date.split("\\.");
+        int y = Integer.parseInt(ymd[0]);
+        int m = Integer.parseInt(ymd[1]);
+        String key = y + "." + m;
+        if (this.monthSpecialMoneyStat.containsKey(key)) {
+            this.monthSpecialMoneyStat.put(key, this.monthSpecialMoneyStat.get(key) + money);
+        } else {
+            this.monthSpecialMoneyStat.put(key, money);
         }
     }
 
@@ -120,7 +134,6 @@ public class Main {
 
         //追加条目
         nowYear.appendItem(m, d, item);
-
     }
 
     /**
@@ -137,14 +150,23 @@ public class Main {
         html.append("</head>").append("\n");
         html.append("<body>").append("\n");
         html.append("<div class='container'>").append("\n");
+
         //月消费总计
         html.append("<table>");
+        html.append("<tr class='title'><td colspan=\"4\">月度统计</td></tr>");
+        html.append("<tr align='center'><td>月份</td><td>日常消费</td><td>专项消费</td><td>总计</td></tr>");
         for (Year y : this.yearList) {
             for (Month m : y.getMonthList()) {
                 html.append("<tr>");
                 String ym = y.getName() + "." + m.getName();
                 html.append("<td><a href='#").append(ym).append("'>").append(ym).append("</a></td>");
                 html.append("<td align='right'>").append(m.getMoney()).append("</td>");
+                Double specialMoney = monthSpecialMoneyStat.get(ym);
+                if (specialMoney == null) {
+                    specialMoney = 0.0;
+                }
+                html.append("<td align='right'>").append(specialMoney).append("</td>");
+                html.append("<td align='right'>").append(m.getMoney() + specialMoney).append("</td>");
                 html.append("</tr>");
             }
         }
@@ -211,7 +233,7 @@ public class Main {
         //生产html文件
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(EXPORT_HTML_PATH), "utf-8"));
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(EXPORT_HTML_PATH), StandardCharsets.UTF_8));
             bw.write(html.toString());
         } catch (IOException e) {
             e.printStackTrace();
